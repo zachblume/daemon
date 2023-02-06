@@ -13,16 +13,52 @@ import Editor from "@monaco-editor/react";
 export default function Home() {
   // State and methods for the editor
   const editorRef = useRef(null);
-  const [theme, setTheme] = useState("light");
-  const [language, setLanguage] = useState("javascript");
   const [isEditorReady, setIsEditorReady] = useState(false);
+  const [__log, setLog] = useState("Console");
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     setIsEditorReady(true);
   };
   const getValue = () => editorRef.current.getValue();
-  const handleEditorChange = (value, event) => {};
-  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
+  let appendLog = (toLog) => {
+    setLog(__log + toLog);
+    // document.getElementById("console").innerHTML += toLog;
+  };
+  let clearLog = () => {
+    setLog(Date.now().toString());
+  };
+  const handleEditorChange = (value, event) => {
+    let sandboxContainer = document.getElementById("sandboxContainer");
+    let oldSandbox = document.getElementById("sandbox");
+    // Remove the sandbox DOM element and regenerate it
+    sandboxContainer.removeChild(oldSandbox);
+    oldSandbox = null;
+
+    let newSandbox = document.createElement("iframe");
+    newSandbox.setAttribute("id", "sandbox");
+    sandboxContainer.appendChild(newSandbox);
+    let sandbox = document.getElementById("sandbox");
+
+    clearLog();
+    sandbox.contentWindow.console.log = (msg) => {
+      appendLog(msg);
+    };
+    try {
+      let newScript = document
+        .getElementById("sandbox")
+        .contentWindow.document.createElement("script");
+      newScript.innerHTML = value;
+      document
+        .getElementById("sandbox")
+        .contentWindow.document.body.appendChild(newScript);
+      // let result = document.getElementById("sandbox").contentWindow.eval(value);
+    } catch (e) {
+      let appendError = (e) => {
+        appendLog(e.message);
+      };
+      appendError(e);
+    }
+  };
 
   return (
     <>
@@ -40,8 +76,6 @@ export default function Home() {
             defaultValue="// Write your JavaScript code below"
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
-            theme={theme}
-            language={language}
             options={{
               lineNumbers: "on",
               fontFamily: "Source Code Pro",
@@ -50,7 +84,10 @@ export default function Home() {
           />
         </div>
         <div id="console">
-          <pre>Output</pre>
+          <pre>{__log}</pre>
+        </div>
+        <div id="sandboxContainer">
+          <iframe id="sandbox"></iframe>
         </div>
       </main>
     </>
