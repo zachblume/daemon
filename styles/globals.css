@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root * {
+  /* font: Inter; */
+  font-family: "Source Code Pro" !important;
+  font-size: 15px !important;
+}
+
+#ide {
+  height: 70vh;
+}
+
+#console {
+  min-height: 30vh;
+  border: 1px solid black;
+}

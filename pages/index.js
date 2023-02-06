@@ -1,11 +1,29 @@
+import React, { useRef, useState } from "react";
+
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
+import "@fontsource/source-code-pro";
 import styles from "@/styles/Home.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+import Editor from "@monaco-editor/react";
+
 export default function Home() {
+  // State and methods for the editor
+  const editorRef = useRef(null);
+  const [theme, setTheme] = useState("light");
+  const [language, setLanguage] = useState("javascript");
+  const [isEditorReady, setIsEditorReady] = useState(false);
+  const handleEditorDidMount = (editor, monaco) => {
+    editorRef.current = editor;
+    setIsEditorReady(true);
+  };
+  const getValue = () => editorRef.current.getValue();
+  const handleEditorChange = (value, event) => {};
+  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
+
   return (
     <>
       <Head>
@@ -15,7 +33,25 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        {/* <h1 className="text-2xl font-bold">Daemon</h1> */}
+        <div id="ide">
+          <Editor
+            defaultLanguage="javascript"
+            defaultValue="// Write your JavaScript code below"
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+            theme={theme}
+            language={language}
+            options={{
+              lineNumbers: "on",
+              fontFamily: "Source Code Pro",
+              fontSize: "15px",
+            }}
+          />
+        </div>
+        <div id="console">
+          <pre>Output</pre>
+        </div>
       </main>
     </>
   );
