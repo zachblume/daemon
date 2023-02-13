@@ -75,13 +75,13 @@ export default function Home() {
 
   var defaultJSValue = `// Write your JavaScript code below
 
-  console.log("Hello, world. EDIT ME AND SEE...")
-  
-  for (let i=0; i<3; i++) {
-      console.log("log")
-  }
-  
-  undefinedVariable`;
+console.log("Hello, world. EDIT ME AND SEE...")
+
+for (let i=0; i<3; i++) {
+    console.log("log")
+}
+
+undefinedVariable`;
 
   return (
     <>
