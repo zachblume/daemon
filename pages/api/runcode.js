@@ -17,7 +17,8 @@ export default function handler(req, res) {
 
   // Evaluate the code
   try {
-    eval(code);
+    // eval(code);
+    console.log("test 2");
   } catch (error) {
     console.error(error);
   }
