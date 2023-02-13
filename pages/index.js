@@ -11,12 +11,18 @@ export default function Home() {
   // Worker reference
   const workerRef = useRef();
   // Process
-  const handleEditorChange = useCallback(async (value) => {
+  const handleEditorChange = async (value) => {
     if (workerRef && workerRef.current) workerRef.current.terminate();
     workerRef.current = new Worker(new URL("../worker.js", import.meta.url));
     workerRef.current.onmessage = (event) => setLog(event.data);
     workerRef.current.postMessage(value);
-  }, []);
+  };
+
+  const handleEditorChangePython = async (value) => {
+    const pyodideWorker = new Worker(new URL("../python.js", import.meta.url));
+    pyodideWorker.onmessage = (event) => setLog(event.data);
+    pyodideWorker.postMessage(value);
+  };
 
   // State and methods for the editor
   const editorRef = useRef(null);
@@ -44,7 +50,11 @@ export default function Home() {
           <Editor
             defaultLanguage="javascript"
             defaultValue={defaultJSValue}
-            onChange={handleEditorChange}
+            onChange={
+              typeof isJS !== "undefined" && !isJS
+                ? handleEditorChangePython
+                : handleEditorChange
+            }
             onMount={handleEditorDidMount}
             options={{
               lineNumbers: "on",
