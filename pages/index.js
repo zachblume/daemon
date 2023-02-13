@@ -20,45 +20,26 @@ export default function Home() {
     setIsEditorReady(true);
   };
   const getValue = () => editorRef.current.getValue();
-  let appendLog = (toLog) => {
-    setLog(__log + toLog);
-    // document.getElementById("console").innerHTML += toLog;
-  };
-  let clearLog = () => {
-    setLog(Date.now().toString());
-  };
-  const handleEditorChange = (value, event) => {
-    let sandboxContainer = document.getElementById("sandboxContainer");
-    let oldSandbox = document.getElementById("sandbox");
-    // Remove the sandbox DOM element and regenerate it
-    sandboxContainer.removeChild(oldSandbox);
-    oldSandbox = null;
-
-    let newSandbox = document.createElement("iframe");
-    newSandbox.setAttribute("id", "sandbox");
-    sandboxContainer.appendChild(newSandbox);
+  const handleEditorChange = async (value, event) => {
     let sandbox = document.getElementById("sandbox");
 
-    clearLog();
-    sandbox.contentWindow.console.log = (msg) => {
-      appendLog(msg);
-    };
-    try {
-      let newScript = document
-        .getElementById("sandbox")
-        .contentWindow.document.createElement("script");
-      newScript.innerHTML = value;
-      document
-        .getElementById("sandbox")
-        .contentWindow.document.body.appendChild(newScript);
-      // let result = document.getElementById("sandbox").contentWindow.eval(value);
-    } catch (e) {
-      let appendError = (e) => {
-        appendLog(e.message);
-      };
-      appendError(e);
-    }
+    // clearLog();
+    let response = await fetch("/api/runcode", {
+      method: "POST",
+      body: JSON.stringify({ code: value }),
+    });
+    setLog(await response.json());
   };
+
+  var defaultJSValue = `// Write your JavaScript code below
+
+  console.log("Hello, world. EDIT ME AND SEE...")
+  
+  for (let i=0; i<3; i++) {
+      console.log("log")
+  }
+  
+  undefinedVariable`;
 
   return (
     <>
@@ -73,7 +54,7 @@ export default function Home() {
         <div id="ide">
           <Editor
             defaultLanguage="javascript"
-            defaultValue="// Write your JavaScript code below"
+            defaultValue={defaultJSValue}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             options={{
