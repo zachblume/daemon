@@ -2,17 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-:root * {
-  /* font: Inter; */
-  font-family: "Source Code Pro" !important;
-  font-size: 15px !important;
-}
-
 #ide {
-  height: 70vh;
+  height: 60vh;
+  @apply py-1;
 }
 
 #console {
-  min-height: 30vh;
-  border: 1px solid black;
+  height: 40vh;
+  border-top: 5px dotted black;
+  font-size: 15px;
+  overflow: auto;
+  @apply bg-black text-white px-5 py-2;
+}
+
+#console h1 {
+  font-family: Inter;
+  @apply text-xl font-light text-white;
+}
+
+#console,
+#console pre {
+  font-family: "Source Code Pro";
 }

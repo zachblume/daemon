@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
@@ -8,6 +8,16 @@ const inter = Inter({ subsets: ["latin"] });
 import Editor from "@monaco-editor/react";
 
 export default function Home() {
+  // Worker reference
+  const workerRef = useRef();
+  // Process
+  const handleEditorChange = useCallback(async (value) => {
+    if (workerRef && workerRef.current) workerRef.current.terminate();
+    workerRef.current = new Worker(new URL("../worker.js", import.meta.url));
+    workerRef.current.onmessage = (event) => setLog(event.data);
+    workerRef.current.postMessage(value);
+  }, []);
+
   // State and methods for the editor
   const editorRef = useRef(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
@@ -17,71 +27,8 @@ export default function Home() {
     setIsEditorReady(true);
     handleEditorChange(editorRef.current.getValue());
   };
-  const getValue = () => editorRef.current.getValue();
-  let clearLog = () => {
-    setLog("begin" + Date.now());
-  };
-  let appendLog = (add) => {
-    setLog(llog + add);
-  };
 
-  // Main function handling the sandbox environment prep and code execution
-  const handleEditorChange = async (value, event) => {
-    // First, clear the log
-    let output = "";
-
-    let sandboxContainer = document.getElementById("sandboxContainer");
-    if (!sandboxContainer) {
-      let initialSandboxContainer = document.createElement("div");
-      initialSandboxContainer.setAttribute("id", "sandboxContainer");
-      document.body.appendChild(initialSandboxContainer);
-      sandboxContainer = document.getElementById("sandboxContainer");
-    }
-
-    // Delete the old sandbox
-    if (document.getElementById("sandbox")) {
-      let oldSandbox = document.getElementById("sandbox");
-      // Remove the sandbox DOM element and regenerate it
-      sandboxContainer.removeChild(oldSandbox);
-      oldSandbox = null;
-    }
-
-    let newSandbox = document.createElement("iframe");
-    newSandbox.setAttribute("id", "sandbox");
-    sandboxContainer.appendChild(newSandbox);
-    let sandbox = document.getElementById("sandbox");
-
-    let logger = (msg) => {
-      output += msg;
-      output += "\n";
-    };
-    sandbox.contentWindow.console.log = logger;
-    sandbox.contentWindow.console = {
-      log: logger,
-      error: logger,
-      info: logger,
-      debug: logger,
-    };
-    sandbox.contentWindow.onerror = logger;
-
-    let result = document
-      .getElementById("sandbox")
-      .contentWindow.eval(
-        "try {" + value + "}catch(error){console.log(error)}"
-      );
-
-    setLog(output);
-  };
-
-  var defaultJSValue = `// Write your JavaScript code below
-
-console.log("Hello, world. EDIT ME AND SEE...")
-
-for (let i=0; i<3; i++) {
-    console.log("log")
-}
-
-undefinedVariable`;
+  var defaultJSValue = `// Write your JavaScript code below\nconsole.log("Hello, world! Edit this statement and glance below.")\nfor (let i=0; i<5; i++) { console.log("Loop five times!"); }`;
 
   return (
     <>
@@ -107,6 +54,7 @@ undefinedVariable`;
           />
         </div>
         <div id="console">
+          <h1>Console</h1>
           <pre>{llog}</pre>
         </div>
       </main>
