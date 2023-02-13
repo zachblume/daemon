@@ -1,34 +1,77 @@
-import React, { useRef, useState } from "react";
-
+import React, { useRef, useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
 import "@fontsource/source-code-pro";
 import styles from "@/styles/Home.module.css";
-
 const inter = Inter({ subsets: ["latin"] });
-
 import Editor from "@monaco-editor/react";
 
 export default function Home() {
   // State and methods for the editor
   const editorRef = useRef(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
-  const [__log, setLog] = useState("Console");
+  const [llog, setLog] = useState("beginning console value");
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     setIsEditorReady(true);
   };
   const getValue = () => editorRef.current.getValue();
+  let clearLog = () => {
+    setLog("begin" + Date.now());
+  };
+  let appendLog = (add) => {
+    setLog(llog + add);
+  };
+
+  // Main function handling the sandbox environment prep and code execution
   const handleEditorChange = async (value, event) => {
+    // First, clear the log
+    let output = "";
+
+    let sandboxContainer = document.getElementById("sandboxContainer");
+    if (!sandboxContainer) {
+      let initialSandboxContainer = document.createElement("div");
+      initialSandboxContainer.setAttribute("id", "sandboxContainer");
+      document.body.appendChild(initialSandboxContainer);
+      sandboxContainer = document.getElementById("sandboxContainer");
+    }
+
+    // Delete the old sandbox
+    if (document.getElementById("sandbox")) {
+      let oldSandbox = document.getElementById("sandbox");
+      // Remove the sandbox DOM element and regenerate it
+      sandboxContainer.removeChild(oldSandbox);
+      oldSandbox = null;
+    }
+
+    let newSandbox = document.createElement("iframe");
+    newSandbox.setAttribute("id", "sandbox");
+    sandboxContainer.appendChild(newSandbox);
     let sandbox = document.getElementById("sandbox");
 
-    // clearLog();
-    let response = await fetch("/api/runcode", {
-      method: "POST",
-      body: JSON.stringify({ code: value }),
-    });
-    setLog(await response.json());
+    sandbox.contentWindow.console.log = (msg) => {
+      output += msg;
+    };
+    sandbox.contentWindow.console.error = (msg) => {
+      output += msg;
+    };
+    try {
+      let newScript = document
+        .getElementById("sandbox")
+        .contentWindow.document.createElement("script");
+      newScript.innerHTML = value;
+      document
+        .getElementById("sandbox")
+        .contentWindow.document.body.appendChild(newScript);
+      let result = document.getElementById("sandbox").contentWindow.eval(value);
+    } catch (e) {
+      let appendError = (e) => {
+        setLog(e.message);
+      };
+      appendError(e);
+    }
+    setLog(output);
   };
 
   var defaultJSValue = `// Write your JavaScript code below
@@ -40,6 +83,7 @@ export default function Home() {
   }
   
   undefinedVariable`;
+  defaultJSValue = "console.log('hello world');";
 
   return (
     <>
@@ -65,10 +109,7 @@ export default function Home() {
           />
         </div>
         <div id="console">
-          <pre>{__log}</pre>
-        </div>
-        <div id="sandboxContainer">
-          <iframe id="sandbox"></iframe>
+          <pre>{llog}</pre>
         </div>
       </main>
     </>
