@@ -3,7 +3,8 @@
 export default function handler(req, res) {
   // Grab the code from the post
 
-  const code = JSON.parse(req.body).code;
+  // const code = JSON.parse(req.body).code;
+  let code = "console.log('testing on vercel');";
 
   // Capture STDOUT
   let output = "";
@@ -13,8 +14,6 @@ export default function handler(req, res) {
   process.stderr.write = (chunk, encoding, callback) => {
     output += chunk;
   };
-
-  // console.log(JSON.stringify(req.body, 0, 2));
 
   // Evaluate the code
   try {
