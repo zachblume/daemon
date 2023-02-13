@@ -11,10 +11,11 @@ export default function Home() {
   // State and methods for the editor
   const editorRef = useRef(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
-  const [llog, setLog] = useState("beginning console value");
+  const [llog, setLog] = useState("");
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     setIsEditorReady(true);
+    handleEditorChange(editorRef.current.getValue());
   };
   const getValue = () => editorRef.current.getValue();
   let clearLog = () => {
