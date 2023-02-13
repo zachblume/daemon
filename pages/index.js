@@ -50,27 +50,25 @@ export default function Home() {
     sandboxContainer.appendChild(newSandbox);
     let sandbox = document.getElementById("sandbox");
 
-    sandbox.contentWindow.console.log = (msg) => {
+    let logger = (msg) => {
       output += msg;
+      output += "\n";
     };
-    sandbox.contentWindow.console.error = (msg) => {
-      output += msg;
+    sandbox.contentWindow.console.log = logger;
+    sandbox.contentWindow.console = {
+      log: logger,
+      error: logger,
+      info: logger,
+      debug: logger,
     };
-    try {
-      let newScript = document
-        .getElementById("sandbox")
-        .contentWindow.document.createElement("script");
-      newScript.innerHTML = value;
-      document
-        .getElementById("sandbox")
-        .contentWindow.document.body.appendChild(newScript);
-      let result = document.getElementById("sandbox").contentWindow.eval(value);
-    } catch (e) {
-      let appendError = (e) => {
-        setLog(e.message);
-      };
-      appendError(e);
-    }
+    sandbox.contentWindow.onerror = logger;
+
+    let result = document
+      .getElementById("sandbox")
+      .contentWindow.eval(
+        "try {" + value + "}catch(error){console.log(error)}"
+      );
+
     setLog(output);
   };
 
@@ -83,7 +81,6 @@ export default function Home() {
   }
   
   undefinedVariable`;
-  defaultJSValue = "console.log('hello world');";
 
   return (
     <>
