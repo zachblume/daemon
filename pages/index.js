@@ -71,7 +71,7 @@ for fizzbuzz in range(12):
             options={{
               lineNumbers: "on",
               fontFamily: "Source Code Pro",
-              fontSize: "15px",
+              fontSize: "14px",
             }}
           />
         </div>
