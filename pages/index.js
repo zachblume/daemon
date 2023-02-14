@@ -7,11 +7,16 @@ import styles from "@/styles/Home.module.css";
 const inter = Inter({ subsets: ["latin"] });
 import Editor from "@monaco-editor/react";
 
-export default function Home() {
+export default function Home({ language }) {
+  const handleEditorChange = async (value) => {
+    if (language == "python") handleEditorChangePython(value);
+    else handleEditorChangeJS(value);
+  };
+
   // Worker reference
   const workerRef = useRef();
   // Process
-  const handleEditorChange = async (value) => {
+  const handleEditorChangeJS = async (value) => {
     if (workerRef && workerRef.current) workerRef.current.terminate();
     workerRef.current = new Worker(new URL("../worker.js", import.meta.url));
     workerRef.current.onmessage = (event) => setLog(event.data);
@@ -35,6 +40,18 @@ export default function Home() {
   };
 
   var defaultJSValue = `// Write your JavaScript code below\nconsole.log("Hello, world! Edit this statement and glance below.")\nfor (let i=0; i<5; i++) { console.log("Loop five times!"); }`;
+  var defaultPythonValue = `# Write Python below!
+for fizzbuzz in range(12):
+    if fizzbuzz % 3 == 0 and fizzbuzz % 5 == 0:
+        print("fizzbuzz")
+        continue
+    elif fizzbuzz % 3 == 0:
+        print("fizz")
+        continue
+    elif fizzbuzz % 5 == 0:
+        print("buzz")
+        continue
+    print(fizzbuzz)`;
 
   return (
     <>
@@ -45,16 +62,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        {/* <h1 className="text-2xl font-bold">Daemon</h1> */}
         <div id="ide">
           <Editor
             defaultLanguage="javascript"
             defaultValue={defaultJSValue}
-            onChange={
-              typeof isJS !== "undefined" && !isJS
-                ? handleEditorChangePython
-                : handleEditorChange
-            }
+            onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             options={{
               lineNumbers: "on",
