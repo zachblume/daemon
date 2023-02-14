@@ -4,7 +4,7 @@
 
 #ide {
   height: 60vh;
-  @apply py-1;
+  @apply py-4;
 }
 
 #console {

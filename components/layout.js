@@ -110,11 +110,7 @@ export default function Layout({ children, language, setLanguage }) {
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <main className="flex-1">
-            {/* Replace with your content */}
-            <div className="py-4">{children}</div>
-            {/* /End replace */}
-          </main>
+          <main className="flex-1">{children}</main>
         </div>
       </div>
     </>
