@@ -46,7 +46,9 @@ export default function Layout({ children, language, setLanguage }) {
         >
           <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
-              <h1>😈 &nbsp;Daemon</h1>
+              <h1>
+                <span>😈</span> &nbsp;Daemon
+              </h1>
               <nav className="mt-5 flex-1 space-y-1 bg-white px-2">
                 {navigation.map((item) => (
                   <a

@@ -12,12 +12,12 @@
   border-top: 2px dotted #ccc;
   font-size: 14px;
   overflow: auto;
-  @apply bg-white text-black px-5 py-2;
+  @apply bg-gray-50 text-black px-5 py-2;
 }
 
 #console h1 {
   font-family: Inter;
-  @apply text-xl font-bold text-gray-200;
+  @apply text-xl font-thin text-gray-400 pb-2;
 }
 
 #console,
@@ -25,5 +25,11 @@
   font-family: "Source Code Pro";
 }
 #sidebar h1 {
-  @apply flex flex-shrink-0 items-center px-4 text-3xl font-extralight text-gray-500;
+  @apply flex flex-shrink-0 items-center px-4 text-3xl font-thin text-gray-400;
+}
+
+#sidebar h1 span {
+  font-size: 0.75em;
+  margin-right: 0.4em;
+  margin-top: 0.1em;
 }
