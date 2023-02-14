@@ -53,6 +53,14 @@ for fizzbuzz in range(12):
         continue
     print(fizzbuzz)`;
 
+  useEffect(() => {
+    if (editorRef && editorRef.current) {
+      console.log(language);
+      if (language == "python") editorRef.current.setValue(defaultPythonValue);
+      else editorRef.current.setValue(defaultJSValue);
+    }
+  }, [language]);
+
   return (
     <>
       <Head>
@@ -83,14 +91,14 @@ for fizzbuzz in range(12):
       <main>
         <div id="ide">
           <Editor
-            defaultLanguage="javascript"
+            language={language}
             defaultValue={defaultJSValue}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             options={{
               lineNumbers: "on",
-              fontFamily: "Source Code Pro",
-              fontSize: "14px",
+              // fontFamily: "Source Code Pro",
+              // fontSize: "14px",
             }}
           />
         </div>
