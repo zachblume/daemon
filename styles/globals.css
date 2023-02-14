@@ -12,7 +12,7 @@
   border-top: 5px dotted black;
   font-size: 14px;
   overflow: auto;
-  @apply bg-gray-900 text-white px-5 py-2;
+  @apply bg-gray-700 text-white px-5 py-2;
 }
 
 #console h1 {
