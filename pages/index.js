@@ -71,7 +71,7 @@ for fizzbuzz in range(12):
         <meta
           name="image"
           property="og:image"
-          content="/public/screenshot.png"
+          content="https://www.daemon.live/public/screenshot.png"
         />
         <meta name="author" content="Zach Blume" />
         <meta
