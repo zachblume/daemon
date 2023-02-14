@@ -67,7 +67,9 @@ for fizzbuzz in range(12):
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😈</text></svg>"
         />
         <meta property="og:title" content="😈 Daemon" />
-        <meta property="og:image" content="/public/screenshot.png" />
+        
+        <meta name="image" property="og:image" content="/public/screenshot.png">
+        <meta name="author" content="Zach Blume">
         <meta
           property="og:description"
           content="daemon is a JS and Python browser sandbox that executes your code on every keystroke."
