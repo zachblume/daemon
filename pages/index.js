@@ -39,7 +39,7 @@ export default function Home({ language }) {
     handleEditorChange(editorRef.current.getValue());
   };
 
-  var defaultJSValue = `// Write your JavaScript code below\nconsole.log("Hello, world! Edit this statement and glance below.")\nfor (let i=0; i<5; i++) { console.log("Loop five times!"); }`;
+  var defaultJSValue = `// Write your JavaScript code below\nconsole.log("Hello, world! Edit this statement and glance below.")\n\nfor (let i=0; i<5; i++) { console.log("Loop five times!"); }`;
   var defaultPythonValue = `# Write Python below!
 for fizzbuzz in range(12):
     if fizzbuzz % 3 == 0 and fizzbuzz % 5 == 0:
