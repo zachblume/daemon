@@ -76,7 +76,7 @@ for fizzbuzz in range(12):
           />
         </div>
         <div id="console">
-          <h1>Console</h1>
+          <h1>Output</h1>
           <pre>{llog}</pre>
         </div>
       </main>
