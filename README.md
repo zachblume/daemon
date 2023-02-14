@@ -1,8 +1,6 @@
-# daemon
+# 😈 daemon
 
-JavaScript and Python browser sandbox for quick debugging.
-
-- daemon executes your code on every keystroke and prints to a console
+A JavaScript and Python browser sandbox that executes your code on every keystroke.
 
 Live at [www.daemon.live](https://www.daemon.live)
 
