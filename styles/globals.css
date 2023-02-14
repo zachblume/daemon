@@ -10,7 +10,7 @@
 #console {
   height: 40vh;
   border-top: 5px dotted black;
-  font-size: 15px;
+  font-size: 14px;
   overflow: auto;
   @apply bg-black text-white px-5 py-2;
 }
